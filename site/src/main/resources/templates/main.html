@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oceanarium</title>
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">Oceanarium</div>
+        <nav>
+            <ul>
+                <li><a href="#">Strona Główna</a></li>
+                <li><a href="#about">O Nas</a></li>
+                <li><a href="#exhibits">Ekspozycje</a></li>
+                <li><a href="#tickets">Bilety</a></li>
+                <li><a href="#events">Wydarzenia</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+                <li><a href="#login">Logowanie</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-text">
+                <h1>Zanurz się w cuda głębin</h1>
+                <p>Odkryj piękno morskiego życia w Oceanarium.</p>
+                <div class="cta-buttons">
+                    <a href="#tickets" class="button">Kup Bilety</a>
+                    <a href="#exhibits" class="button">Zobacz Ekspozycje</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <h2>O Nas</h2>
+            <p>Dowiedz się więcej o naszej misji, której celem jest edukacja i inspirowanie poprzez przybliżanie cudów oceanu.</p>
+            <a href="#" class="link">Dowiedz się więcej</a>
+        </section>
+
+        <section id="exhibits" class="exhibits">
+            <h2>Wyróżnione Ekspozycje</h2>
+            <div class="exhibit-grid">
+                <div class="exhibit">
+                    <img src="sharks.jpg" alt="Rekiny">
+                    <h3>Rekiny</h3>
+                </div>
+                <div class="exhibit">
+                    <img src="coral.jpg" alt="Rafa Koralowa">
+                    <h3>Rafa Koralowa</h3>
+                </div>
+                <div class="exhibit">
+                    <img src="jellyfish.jpg" alt="Meduzy">
+                    <h3>Meduzy</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="login" class="login">
+            <h2>Logowanie</h2>
+            <form action="/login" method="post" class="login-form">
+                <label for="username">Nazwa Użytkownika:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Hasło:</label>
+                <input type="password" id="password" name="password" required>
+
+                <label for="role">Rola:</label>
+                <select id="role" name="role">
+                    <option value="client">Klient</option>
+                    <option value="employee">Pracownik</option>
+                </select>
+
+                <button type="submit" class="button">Zaloguj się</button>
+            </form>
+        </section>
+
+        <section id="events" class="events">
+            <h2>Nadchodzące Wydarzenia</h2>
+            <ul>
+                <li>Warsztaty Biologii Morskiej - 15 stycznia</li>
+                <li>Wykład o Ochronie Raf Koralowych - 12 lutego</li>
+                <li>Noc Pod Oceanem - 20 marca</li>
+            </ul>
+            <a href="#" class="link">Zobacz Wszystkie Wydarzenia</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Oceanarium. Wszelkie prawa zastrzeżone.</p>
+            <div class="social-links">
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
