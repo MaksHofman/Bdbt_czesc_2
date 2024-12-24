@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_my_page.css') }}">
+</head>
+<body>
+<div class="navbar">
+    <div class="top-bar">
+        <a href="{{ url_for('user_page') }}">Home</a>
+        <a href="{{ url_for('progress') }}">Progress</a>
+        <a href="{{ url_for('stats') }}">Stats</a>
+        <a href="{{ url_for('kcal_calculator') }}">Kcal Calculator</a>
+        <a href="{{ url_for('my_page') }}">My Page</a>
+        <a href="{{ url_for('history') }}">History</a>
+    </div>
+    <div class="login-box">
+        <a class="btn" href="{{ url_for('sign_out') }}">Sign Out</a>
+    </div>
+</div>
+<div class="container">
+    <h1>My Page</h1>
+    <form action="{{ url_for('update_user') }}" method="post">
+    <div class="content">
+        <div class="holder">
+            <div class="header-holder">
+                <h3>Username</h3>
+            </div>
+            <div class="my-page-content">
+                <input type="text" name="username" value="{{ username }}">
+{#                <p>{{ username }}</p>#}
+            </div>
+        </div>
+        <div class="holder">
+            <div class="header-holder">
+                <h3>Email</h3>
+            </div>
+            <div class="my-page-content">
+                <p>{{ email }}</p>
+            </div>
+        </div>
+        <div class="holder">
+            <div class="header-holder">
+                <h3>Gender</h3>
+            </div>
+            <div class="my-page-content">
+                <select name="gender">
+                    <option value="male" {% if gender == 'male' %}selected{% endif %}>Male</option>
+                    <option value="female" {% if gender == 'female' %}selected{% endif %}>Female</option>
+                </select>
+            </div>
+        </div>
+        <div class="holder">
+            <div class="header-holder">
+                <h3>Age</h3>
+            </div>
+            <div class="my-page-content">
+                <input type="number" name="age" value="{{ age }}">
+            </div>
+        </div>
+        <div class="holder">
+            <div class="header-holder">
+                <h3>Height</h3>
+            </div>
+            <div class="my-page-content">
+                <input type="number" name="height" value="{{ height }}">
+            </div>
+        </div>
+        <div class="holder">
+            <div class="header-holder">
+                <h3>Mass</h3>
+            </div>
+            <div class="my-page-content">
+                <input type="number" name="mass" value="{{ mass }}">
+            </div>
+        </div>
+        <div class="holder">
+            <div class="header-holder">
+                <h3>Activity Level</h3>
+            </div>
+            <div class="my-page-content">
+                <select name="activity_level">
+                    <option value="sedentary" {% if activity_level == 'sedentary' %}selected{% endif %}>Sedentary</option>
+                    <option value="lightly active" {% if activity_level == 'lightly active' %}selected{% endif %}>Lightly active</option>
+                    <option value="moderately active" {% if activity_level == 'moderately active' %}selected{% endif %}>Moderately active</option>
+                    <option value="very active" {% if activity_level == 'very active' %}selected{% endif %}>Very active</option>
+                    <option value="super active" {% if activity_level == 'super active' %}selected{% endif %}>Super active</option>
+                </select>
+            </div>
+        </div>
+        <button id="update-button">Update</button>
+    </div>
+    </form>
+</div>
+</body>
+</html>
