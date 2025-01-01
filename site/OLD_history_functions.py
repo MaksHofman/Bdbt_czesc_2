@@ -4,6 +4,9 @@ from sqlalchemy import func, desc
 
 from models import db, User, UserCalories
 
+"""
+Zostawiam zeby przyspieszyc pisanie przyszlego kodu(taka podpowiedz)
+"""
 
 def get_history_by_email(email):
 

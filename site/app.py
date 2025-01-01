@@ -1,15 +1,18 @@
 import os
-
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, redirect, render_template, request, session, url_for
 from models import db, User, Product, Progress
 from db_init import database_path
 from kcal_functions import *
 from login_register import *
-from my_page_functions import *
+from site.OLD_my_page_functions import *
 from stats_functions import *
 from user_page_functions import *
-from history_functions import *
+from site.OLD_history_functions import *
+
+"""
+Zmienic pod projekt oceanarium
+"""
 
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = 'your_secret_key'

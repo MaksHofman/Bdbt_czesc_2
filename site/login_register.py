@@ -2,6 +2,10 @@ from datetime import date, datetime, timedelta
 from models import db, User
 import re
 
+"""
+Trzeba zupdatowac pod uzycie do oceanaium paga
+"""
+
 __login_check = r'^[A-Za-z]+$'
 __password_check = r'^[A-Za-z0-9]+$'
 

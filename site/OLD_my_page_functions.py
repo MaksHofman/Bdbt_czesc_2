@@ -1,6 +1,10 @@
 from flask import session
 from models import db, User
 
+"""
+To zostawiam jako podpowiec jak sie dodawalo zmienee do sekcji
+"""
+
 
 def update_user_by_email(username, email, gender, age, height, mass, activity_level):
     user = User.query.filter_by(email=email).first()
