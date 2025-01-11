@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oceanarium</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <!-- Nawigacja -->
+    <div class="navbar">
+        <a href="{{ url_for('home') }}" class="{% if active_page == 'home' %}active{% endif %}">Strona Główna</a>
+        <a href="{{ url_for('aquariums') }}" class="{% if active_page == 'aquariums' %}active{% endif %}">Akwaria</a>
+        {% if not session.get('logged_in') %}
+            <a href="{{ url_for('login') }}" class="{% if active_page == 'login' %}active{% endif %}">Zaloguj</a>
+        {% else %}
+            {% if session.get('role') == 'employee' %}
+                <a href="{{ url_for('employee') }}" class="{% if active_page == 'employee' %}active{% endif %}">Panel Pracownika</a>
+            {% elif session.get('role') == 'customer' %}
+                <a href="{{ url_for('tickets') }}" class="{% if active_page == 'tickets' %}active{% endif %}">Kup Bilet</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="{% if active_page == 'logout' %}active{% endif %}">Wyloguj</a>
+        {% endif %}
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Witamy w Oceanarium</h1>
+        <p>Odkryj fascynujące życie morskie i podziwiaj nasze wyjątkowe ekspozycje.</p>
+        <a href="{{ url_for('aquariums') }}" class="btn-primary">Zobacz Akwaria</a>
+    </div>
+
+    <!-- Główna zawartość -->
+    <div class="content">
+        <div class="card">
+            <h3>Nasze Akwaria</h3>
+            <p>Odwiedź niezwykłe akwaria z rekinami, rafami koralowymi i rzadkimi gatunkami ryb.</p>
+            <a href="{{ url_for('aquariums') }}" class="btn-primary">Dowiedz się więcej</a>
+        </div>
+        <div class="card">
+            <h3>Panel Pracownika</h3>
+            <p>Zaloguj się jako pracownik, aby zarządzać bazą danych.</p>
+            <a href="{{ url_for('login') }}" class="btn-primary">Zaloguj się</a>
+        </div>
+        <div class="card">
+            <h3>Kup Bilet</h3>
+            <p>Wejdź do magicznego świata oceanarium. Kup bilet online i zaoszczędź czas!</p>
+            <a href="{{ url_for('login') }}" class="btn-primary">Kup Bilet</a>
+        </div>
+    </div>
+
+    <!-- Stopka -->
+    <footer>
+        &copy; 2025 Oceanarium. Wszystkie prawa zastrzeżone.
+    </footer>
+</body>
+</html>
