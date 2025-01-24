@@ -42,9 +42,3 @@ INSERT INTO Ryby (Id_akwaria, Id_oceanaria, Gatunek, Typ_wody, Wiek)
 VALUES
 (1, 1, 'Rekin Biały', 'Słona', 5),
 (2, 1, 'Pirania Czerwona', 'Słodka', 3);
-
--- Przykład wstawiania obrazu do tabeli Akwaria
--- Zapis obrazu do kolumny BYTEA:
-\COPY Akwaria (Id_oceanaria, Pojemnosc, Typ_wody, Zdjecie) 
-FROM PROGRAM 'cat /sciezka/do/zdjecie.jpg' WITH (FORMAT binary);
--- Wartość obrazu można zmodyfikować na podstawie lokalizacji pliku.

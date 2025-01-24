@@ -1,66 +1,87 @@
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, String, Numeric, Date, ForeignKey, LargeBinary
+from sqlalchemy.orm import relationship, declarative_base
 
-db = SQLAlchemy()
+Base = declarative_base()
 
-"""
-Trzeba tu zmienic wszystkie modele na te co beda w schemie
-"""
+class Oceanaria(Base):
+    __tablename__ = 'Oceanaria'
 
-class User(db.Model):
-    __tablename__ = 'users'
-    email = db.Column(db.String, primary_key=True)
-    username = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False)
-    mass = db.Column(db.Integer, nullable=True)
-    age = db.Column(db.Integer, nullable=True)
-    height = db.Column(db.Integer, nullable=True)
-    gender = db.Column(db.String, nullable=True)
-    goal = db.Column(db.String, nullable=True)
-    account_created_date = db.Column(db.Date, nullable=True)
-    activity_level = db.Column(db.String, nullable=True)
-    best_streak = db.Column(db.Integer, nullable=True)
-    current_streak = db.Column(db.Integer, nullable=True)
-    days_when_on_site = db.Column(db.Integer, nullable=True)
-    added_products = db.Column(db.Integer, nullable=True)
-    pr_chest = db.Column(db.Integer, nullable=True)
-    last_day_user_checked_site = db.Column(db.Date, nullable=True)
+    Id_oceanaria = Column(Integer, primary_key=True)
+    Nazwa = Column(String(255), nullable=False)
+    Adress = Column(String(255), nullable=False)
+    Telefon = Column(String(20))
+    Email = Column(String(255))
 
-    # Relationships
-    progress = db.relationship('Progress', backref='user', lazy=True)
-    user_calories = db.relationship('UserCalories', backref='user', lazy=True)
+    akwaria = relationship('Akwaria', back_populates='oceanarium')
+    ryby = relationship('Ryby', back_populates='oceanarium')
 
+class Pracownik(Base):
+    __tablename__ = 'Pracownik'
 
-class Product(db.Model):
-    __tablename__ = 'products'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String, nullable=False, unique=True)
-    company = db.Column(db.String, nullable=False)
-    shop = db.Column(db.String, nullable=False)
-    mass = db.Column(db.Integer, nullable=False)
-    energy_value = db.Column(db.Float, nullable=False)
-    fat = db.Column(db.Float, nullable=False)
-    saturated_fat = db.Column(db.Float, nullable=False)
-    carbohydrates = db.Column(db.Float, nullable=False)
-    sugars = db.Column(db.Float, nullable=False)
-    fiber = db.Column(db.Float, nullable=False)
-    proteins = db.Column(db.Float, nullable=False)
-    salts = db.Column(db.Float, nullable=False)
-    rating = db.Column(db.Float, nullable=False)
+    Id_pracownika = Column(Integer, primary_key=True)
+    Imie = Column(String(100), nullable=False)
+    Nazwisko = Column(String(100), nullable=False)
+    Stopien_naukowy = Column(String(100))
+    Data_zatrudnienia = Column(Date, nullable=False)
+    Placa = Column(Numeric(10, 2), nullable=False)
+    Zdjecie = Column(LargeBinary)
 
+    uzytkownik = relationship('Uzytkownik', back_populates='pracownik')
 
-class Progress(db.Model):
-    __tablename__ = 'progress'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.String, db.ForeignKey('users.email'), nullable=False)
-    progress_update = db.Column(db.Integer, nullable=False)
-    progress_update_date = db.Column(db.Date, nullable=False)
-    progress_type = db.Column(db.String, nullable=False)
+class Klient(Base):
+    __tablename__ = 'Klient'
 
+    Id_klienta = Column(Integer, primary_key=True)
+    Imie = Column(String(100), nullable=False)
+    Nazwisko = Column(String(100), nullable=False)
+    Typ_ulgi = Column(String(50))
 
-class UserCalories(db.Model):
-    __tablename__ = 'user_calories'
+    uzytkownik = relationship('Uzytkownik', back_populates='klient')
+    bilety = relationship('Bilet', back_populates='klient')
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_email = db.Column(db.String, db.ForeignKey('users.email'), nullable=False)
-    kcal_count = db.Column(db.Integer, nullable=False)
-    entry_date = db.Column(db.DateTime, nullable=False)
+class Uzytkownik(Base):
+    __tablename__ = 'Uzytkownik'
+
+    Id_uzytkownika = Column(Integer, primary_key=True)
+    Nazwa = Column(String(100), nullable=False)
+    Haslo = Column(String(255), nullable=False)
+    Id_pracownika = Column(Integer, ForeignKey('Pracownik.Id_pracownika', ondelete='SET NULL'))
+    Id_klienta = Column(Integer, ForeignKey('Klient.Id_klienta', ondelete='SET NULL'))
+
+    pracownik = relationship('Pracownik', back_populates='uzytkownik')
+    klient = relationship('Klient', back_populates='uzytkownik')
+
+class Bilet(Base):
+    __tablename__ = 'Bilet'
+
+    Id_biletu = Column(Integer, primary_key=True)
+    Id_klienta = Column(Integer, ForeignKey('Klient.Id_klienta', ondelete='CASCADE'), nullable=False)
+    Cena = Column(Numeric(10, 2), nullable=False)
+
+    klient = relationship('Klient', back_populates='bilety')
+
+class Akwaria(Base):
+    __tablename__ = 'Akwaria'
+
+    Id_akwaria = Column(Integer, primary_key=True)
+    Id_oceanaria = Column(Integer, ForeignKey('Oceanaria.Id_oceanaria', ondelete='CASCADE'), nullable=False)
+    Pojemnosc = Column(Numeric(10, 2), nullable=False)
+    Typ_wody = Column(String(50), nullable=False)
+    Zdjecie = Column(LargeBinary)
+
+    oceanarium = relationship('Oceanaria', back_populates='akwaria')
+    ryby = relationship('Ryby', back_populates='akwarium')
+
+class Ryby(Base):
+    __tablename__ = 'Ryby'
+
+    Id_ryby = Column(Integer, primary_key=True)
+    Id_akwaria = Column(Integer, ForeignKey('Akwaria.Id_akwaria', ondelete='CASCADE'), nullable=False)
+    Id_oceanaria = Column(Integer, ForeignKey('Oceanaria.Id_oceanaria', ondelete='CASCADE'))
+    Gatunek = Column(String(100), nullable=False)
+    Typ_wody = Column(String(50), nullable=False)
+    Wiek = Column(Integer)
+    Zdjecie = Column(LargeBinary)
+
+    akwarium = relationship('Akwaria', back_populates='ryby')
+    oceanarium = relationship('Oceanaria', back_populates='ryby')

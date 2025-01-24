@@ -1,9 +1,8 @@
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, redirect, render_template, request, session, url_for
-from models import db, User, Product, Progress
-
 from flask import Flask, render_template, request, redirect, url_for, session
+from db_connect_func import get_and_save_oceanarium_by_id
 
 app = Flask(__name__)
 app.secret_key = 'sekretny_klucz'
@@ -11,6 +10,9 @@ app.secret_key = 'sekretny_klucz'
 # Strona główna
 @app.route('/')
 def home():
+    #Obejscie przez brak czasu
+    session['oceanarium_id'] = 1
+    get_and_save_oceanarium_by_id(session, session['oceanarium_id'])
     return render_template('main.html', active_page='home')
 
 # Strona akwariów
