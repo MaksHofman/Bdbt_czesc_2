@@ -1,18 +1,14 @@
 from datetime import date, datetime, timedelta
-from models import db, User
+from models import *
 import re
-
-"""
-Trzeba zupdatowac pod uzycie do oceanaium paga
-"""
 
 __login_check = r'^[A-Za-z]+$'
 __password_check = r'^[A-Za-z0-9]+$'
 
 def get_user_from_db(username):
-    user = User.query.filter_by(username=username).first()
+    user = Uzytkownik.query.filter_by(username=username).first()
     if user:
-        return user.username, user.mass, user.age, user.height, user.email, user.gender, user.activity_level
+        return user.username, 
     else:
         return None, None, None, None, None, None, None
 
@@ -24,33 +20,39 @@ def anti_sql_injection_login_check(login, password) -> bool:
 
 # Checks if an email is already in use
 def check_email_exists(email: str) -> bool:
-    return User.query.filter_by(email=email).first() is not None
+    return Uzytkownik.query.filter_by(email=email).first() is not None
 
 
 # Checks if login credentials are correct
 def checking_if_login_correct(login: str, password: str) -> bool:
-    user = User.query.filter_by(username=login, password=password).first()
+    user = Uzytkownik.query.filter_by(username=login, password=password).first()
     return user is not None
 
 
 # Adds a user to the database
-def add_user_to_db(username: str, email: str, password: str, creation_date: datetime) -> bool:
+def add_user_to_db(login: str, password: str, email: str):
     try:
-        if not check_email_exists(email):
-            new_user = User(username=username, email=email, password=password, account_created_date=creation_date)
-            user_streak_init(new_user)
-            db.session.add(new_user)
-            db.session.commit()
-            print("User added successfully")
-            return True
-        else:
-            print("Email already exists")
+        # Check if the login already exists
+        existing_user = Uzytkownik.query.filter_by(nazwa=login).first()
+        if existing_user:
             return False
-    except Exception as e:
-        db.session.rollback()
-        print(f"Error adding user to DB: {e}")
-        return False
 
+        # Create the user entry
+        new_user = Uzytkownik(
+            nazwa=login,
+            haslo=password,
+            email=email,
+            id_pracownika=None,  # No relation to Pracownik
+            id_klienta=None      # No relation to Klient
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        return True
+    
+    except Exception as e:
+        db.session.rollback()  # Rollback in case of failure
+        return {"success": False, "message": f"An error occurred: {str(e)}"}
 
 # Utility functions
 def check_if_email_correct(email: str) -> bool:
@@ -58,8 +60,3 @@ def check_if_email_correct(email: str) -> bool:
     return re.match(regex, email) is not None
 
 
-def user_streak_init(user):
-    user.best_streak = 1
-    user.current_streak = 1
-    user.days_when_on_site = 1
-    user.last_day_user_checked_site = date.today()

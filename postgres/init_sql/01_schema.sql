@@ -31,6 +31,7 @@ CREATE TABLE Uzytkownik (
     Id_uzytkownika SERIAL PRIMARY KEY,
     Nazwa VARCHAR(100) NOT NULL,
     Haslo VARCHAR(255) NOT NULL,
+    Email VARCHAR(255),
     Id_pracownika INT,
     Id_klienta INT,
     FOREIGN KEY (Id_pracownika) REFERENCES Pracownik(Id_pracownika) ON DELETE SET NULL,

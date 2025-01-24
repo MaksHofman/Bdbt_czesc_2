@@ -1,87 +1,93 @@
-from sqlalchemy import Column, Integer, String, Numeric, Date, ForeignKey, LargeBinary
-from sqlalchemy.orm import relationship, declarative_base
+from flask_sqlalchemy import SQLAlchemy
 
-Base = declarative_base()
+db = SQLAlchemy()
 
-class Oceanaria(Base):
-    __tablename__ = 'Oceanaria'
+class Oceanarium(db.Model):
+    __tablename__ = 'oceanaria'
 
-    Id_oceanaria = Column(Integer, primary_key=True)
-    Nazwa = Column(String(255), nullable=False)
-    Adress = Column(String(255), nullable=False)
-    Telefon = Column(String(20))
-    Email = Column(String(255))
+    id = db.Column('id_oceanaria', db.Integer, primary_key=True)  # Maps to Id_oceanaria
+    nazwa = db.Column('nazwa', db.String(255), nullable=False)
+    adress = db.Column('adress', db.String(255), nullable=False)
+    telefon = db.Column('telefon', db.String(20))
+    email = db.Column('email', db.String(255))
 
-    akwaria = relationship('Akwaria', back_populates='oceanarium')
-    ryby = relationship('Ryby', back_populates='oceanarium')
+    akwaria = db.relationship('Akwarium', back_populates='oceanarium', cascade='all, delete')
+    ryby = db.relationship('Ryba', back_populates='oceanarium', cascade='all, delete')
 
-class Pracownik(Base):
-    __tablename__ = 'Pracownik'
 
-    Id_pracownika = Column(Integer, primary_key=True)
-    Imie = Column(String(100), nullable=False)
-    Nazwisko = Column(String(100), nullable=False)
-    Stopien_naukowy = Column(String(100))
-    Data_zatrudnienia = Column(Date, nullable=False)
-    Placa = Column(Numeric(10, 2), nullable=False)
-    Zdjecie = Column(LargeBinary)
+class Pracownik(db.Model):
+    __tablename__ = 'pracownik'
 
-    uzytkownik = relationship('Uzytkownik', back_populates='pracownik')
+    id = db.Column('id_pracownika', db.Integer, primary_key=True)  # Maps to Id_pracownika
+    imie = db.Column('imie', db.String(100), nullable=False)
+    nazwisko = db.Column('nazwisko', db.String(100), nullable=False)
+    stopien_naukowy = db.Column('stopien_naukowy', db.String(100))
+    data_zatrudnienia = db.Column('data_zatrudnienia', db.Date, nullable=False)
+    placa = db.Column('placa', db.Numeric(10, 2), nullable=False)
+    zdjecie = db.Column('zdjecie', db.LargeBinary)
 
-class Klient(Base):
-    __tablename__ = 'Klient'
+    uzytkownik = db.relationship('Uzytkownik', back_populates='pracownik')
 
-    Id_klienta = Column(Integer, primary_key=True)
-    Imie = Column(String(100), nullable=False)
-    Nazwisko = Column(String(100), nullable=False)
-    Typ_ulgi = Column(String(50))
 
-    uzytkownik = relationship('Uzytkownik', back_populates='klient')
-    bilety = relationship('Bilet', back_populates='klient')
+class Klient(db.Model):
+    __tablename__ = 'klient'
 
-class Uzytkownik(Base):
-    __tablename__ = 'Uzytkownik'
+    id = db.Column('id_klienta', db.Integer, primary_key=True)  # Maps to Id_klienta
+    imie = db.Column('imie', db.String(100), nullable=False)
+    nazwisko = db.Column('nazwisko', db.String(100), nullable=False)
+    typ_ulgi = db.Column('typ_ulgi', db.String(50))
 
-    Id_uzytkownika = Column(Integer, primary_key=True)
-    Nazwa = Column(String(100), nullable=False)
-    Haslo = Column(String(255), nullable=False)
-    Id_pracownika = Column(Integer, ForeignKey('Pracownik.Id_pracownika', ondelete='SET NULL'))
-    Id_klienta = Column(Integer, ForeignKey('Klient.Id_klienta', ondelete='SET NULL'))
+    uzytkownik = db.relationship('Uzytkownik', back_populates='klient')
+    bilety = db.relationship('Bilet', back_populates='klient', cascade='all, delete')
 
-    pracownik = relationship('Pracownik', back_populates='uzytkownik')
-    klient = relationship('Klient', back_populates='uzytkownik')
 
-class Bilet(Base):
-    __tablename__ = 'Bilet'
+class Uzytkownik(db.Model):
+    __tablename__ = 'uzytkownik'
 
-    Id_biletu = Column(Integer, primary_key=True)
-    Id_klienta = Column(Integer, ForeignKey('Klient.Id_klienta', ondelete='CASCADE'), nullable=False)
-    Cena = Column(Numeric(10, 2), nullable=False)
+    id = db.Column('id_uzytkownika', db.Integer, primary_key=True)  # Maps to Id_uzytkownika
+    nazwa = db.Column('nazwa', db.String(100), nullable=False)
+    haslo = db.Column('haslo', db.String(255), nullable=False)
+    email = db.Column('Email', db.String(255), nullable=True)
+    id_pracownika = db.Column('id_pracownika', db.Integer, db.ForeignKey('pracownik.id_pracownika', ondelete='SET NULL'))
+    id_klienta = db.Column('id_klienta', db.Integer, db.ForeignKey('klient.id_klienta', ondelete='SET NULL'))
 
-    klient = relationship('Klient', back_populates='bilety')
+    pracownik = db.relationship('Pracownik', back_populates='uzytkownik')
+    klient = db.relationship('Klient', back_populates='uzytkownik')
 
-class Akwaria(Base):
-    __tablename__ = 'Akwaria'
 
-    Id_akwaria = Column(Integer, primary_key=True)
-    Id_oceanaria = Column(Integer, ForeignKey('Oceanaria.Id_oceanaria', ondelete='CASCADE'), nullable=False)
-    Pojemnosc = Column(Numeric(10, 2), nullable=False)
-    Typ_wody = Column(String(50), nullable=False)
-    Zdjecie = Column(LargeBinary)
+class Bilet(db.Model):
+    __tablename__ = 'bilet'
 
-    oceanarium = relationship('Oceanaria', back_populates='akwaria')
-    ryby = relationship('Ryby', back_populates='akwarium')
+    id = db.Column('id_biletu', db.Integer, primary_key=True)  # Maps to Id_biletu
+    id_klienta = db.Column('id_klienta', db.Integer, db.ForeignKey('klient.id_klienta', ondelete='CASCADE'), nullable=False)
+    cena = db.Column('cena', db.Numeric(10, 2), nullable=False)
 
-class Ryby(Base):
-    __tablename__ = 'Ryby'
+    klient = db.relationship('Klient', back_populates='bilety')
 
-    Id_ryby = Column(Integer, primary_key=True)
-    Id_akwaria = Column(Integer, ForeignKey('Akwaria.Id_akwaria', ondelete='CASCADE'), nullable=False)
-    Id_oceanaria = Column(Integer, ForeignKey('Oceanaria.Id_oceanaria', ondelete='CASCADE'))
-    Gatunek = Column(String(100), nullable=False)
-    Typ_wody = Column(String(50), nullable=False)
-    Wiek = Column(Integer)
-    Zdjecie = Column(LargeBinary)
 
-    akwarium = relationship('Akwaria', back_populates='ryby')
-    oceanarium = relationship('Oceanaria', back_populates='ryby')
+class Akwarium(db.Model):
+    __tablename__ = 'akwaria'
+
+    id = db.Column('id_akwaria', db.Integer, primary_key=True)  # Maps to Id_akwaria
+    id_oceanaria = db.Column('id_oceanaria', db.Integer, db.ForeignKey('oceanaria.id_oceanaria', ondelete='CASCADE'), nullable=False)
+    pojemnosc = db.Column('pojemnosc', db.Numeric(10, 2), nullable=False)
+    typ_wody = db.Column('typ_wody', db.String(50), nullable=False)
+    zdjecie = db.Column('zdjecie', db.LargeBinary)
+
+    oceanarium = db.relationship('Oceanarium', back_populates='akwaria')
+    ryby = db.relationship('Ryba', back_populates='akwarium', cascade='all, delete')
+
+
+class Ryba(db.Model):
+    __tablename__ = 'ryby'
+
+    id = db.Column('id_ryby', db.Integer, primary_key=True)  # Maps to Id_ryby
+    id_akwaria = db.Column('id_akwaria', db.Integer, db.ForeignKey('akwaria.id_akwaria', ondelete='CASCADE'), nullable=False)
+    id_oceanaria = db.Column('id_oceanaria', db.Integer, db.ForeignKey('oceanaria.id_oceanaria', ondelete='CASCADE'))
+    gatunek = db.Column('gatunek', db.String(100), nullable=False)
+    typ_wody = db.Column('typ_wody', db.String(50), nullable=False)
+    wiek = db.Column('wiek', db.Integer)
+    zdjecie = db.Column('zdjecie', db.LargeBinary)
+
+    akwarium = db.relationship('Akwarium', back_populates='ryby')
+    oceanarium = db.relationship('Oceanarium', back_populates='ryby')
