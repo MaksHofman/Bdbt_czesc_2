@@ -60,3 +60,36 @@ def check_if_email_correct(email: str) -> bool:
     return re.match(regex, email) is not None
 
 
+def get_user_info(user_id: int):
+    user = Uzytkownik.query.filter(Uzytkownik.id == user_id).first()
+    if user:
+        # Prepare user information
+        user_info = {
+            "id": user.id,
+            "nazwa": user.nazwa,
+            "id_pracownika": user.id_pracownika,
+            "id_klienta": user.id_klienta,
+            "is_employee": user.id_pracownika is not None,  # True if the user is an employee
+        }
+
+        # Add detailed information about employee if exists
+        if user.id_pracownika:
+            user_info["pracownik"] = {
+                "imie": user.pracownik.imie,
+                "nazwisko": user.pracownik.nazwisko,
+                "stopien_naukowy": user.pracownik.stopien_naukowy,
+                "data_zatrudnienia": user.pracownik.data_zatrudnienia,
+                "placa": float(user.pracownik.placa),
+            }
+
+        # Add detailed information about client if exists
+        if user.id_klienta:
+            user_info["klient"] = {
+                "imie": user.klient.imie,
+                "nazwisko": user.klient.nazwisko,
+                "typ_ulgi": user.klient.typ_ulgi,
+            }
+
+        return user_info
+    else:
+        return None
