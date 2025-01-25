@@ -20,7 +20,7 @@ VALUES
 -- Wstawienie danych do Uzytkownik
 INSERT INTO Uzytkownik (Nazwa, Haslo, Id_pracownika, Id_klienta)
 VALUES
-('pracownik1', 'haslo123', 1, NULL),
+('qw', 'qw', 1, NULL),
 ('klient1', 'haslo321', NULL, 1),
 ('pracownik2', 'tajnehaslo', 2, NULL),
 ('klient2', 'sekretnehaslo', NULL, 2);

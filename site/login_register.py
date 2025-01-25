@@ -5,12 +5,6 @@ import re
 __login_check = r'^[A-Za-z]+$'
 __password_check = r'^[A-Za-z0-9]+$'
 
-def get_user_from_db(username):
-    user = Uzytkownik.query.filter_by(username=username).first()
-    if user:
-        return user.username, 
-    else:
-        return None, None, None, None, None, None, None
 
 def anti_sql_injection_login_check(login, password) -> bool:
     if re.match(__login_check, login) and re.match(__password_check, password):
@@ -25,7 +19,7 @@ def check_email_exists(email: str) -> bool:
 
 # Checks if login credentials are correct
 def checking_if_login_correct(login: str, password: str) -> bool:
-    user = Uzytkownik.query.filter_by(username=login, password=password).first()
+    user = Uzytkownik.query.filter_by(nazwa=login, haslo=password).first()
     return user is not None
 
 
@@ -93,3 +87,23 @@ def get_user_info(user_id: int):
         return user_info
     else:
         return None
+
+def get_user_from_db(login: str):
+    try:
+        # Query the Uzytkownik table for the specified user
+        user = Uzytkownik.query.filter_by(nazwa=login).first()
+
+        if not user:
+            return False
+
+        # Prepare the result
+        user_info = {
+            "Nazwa": user.nazwa,
+            "Email": user.email,
+            "czyPracownik": user.id_pracownika is not None  # Boolean check if the user is a Pracownik
+        }
+
+        return user_info
+
+    except Exception as e:
+        return {"success": False, "message": f"An error occurred: {str(e)}"}

@@ -47,7 +47,7 @@ class Uzytkownik(db.Model):
     id = db.Column('id_uzytkownika', db.Integer, primary_key=True)  # Maps to Id_uzytkownika
     nazwa = db.Column('nazwa', db.String(100), nullable=False)
     haslo = db.Column('haslo', db.String(255), nullable=False)
-    email = db.Column('Email', db.String(255), nullable=True)
+    email = db.Column('email', db.String(255), nullable=True)
     id_pracownika = db.Column('id_pracownika', db.Integer, db.ForeignKey('pracownik.id_pracownika', ondelete='SET NULL'))
     id_klienta = db.Column('id_klienta', db.Integer, db.ForeignKey('klient.id_klienta', ondelete='SET NULL'))
 

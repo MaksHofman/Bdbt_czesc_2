@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, redirect, render_template, request, session, url_for, jsonify
 from models import db
 from db_connect_func import get_and_save_oceanarium_by_id
-from login_register import check_if_email_correct, anti_sql_injection_login_check, checking_if_login_correct, check_email_exists, add_user_to_db
+from login_register import check_if_email_correct, anti_sql_injection_login_check, checking_if_login_correct, check_email_exists, add_user_to_db, get_user_from_db
 
 app = Flask(__name__)
 app.secret_key = 'sekretny_klucz'
@@ -34,9 +34,10 @@ def login():
         password = request.form['password']
         if checking_if_login_correct(login, password) and anti_sql_injection_login_check(login, password):
             session['logged_in'] = True
-            username, l = get_user_from_db(login)
-            session['username'] = username
-            session['email'] = email
+            user_info = get_user_from_db(login)
+            session['username'] = user_info.Nazwa
+            session['email'] = user_info.Email
+            session['czyPracownil'] = user_info.czyPracownik
             return redirect(url_for('user_page'))
         else:
             wrong_login = "Wrong username or password"
