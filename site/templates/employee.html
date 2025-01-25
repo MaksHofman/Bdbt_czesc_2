@@ -1,1 +1,45 @@
-    
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Pracownika - Edytuj Akwaria</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <!-- Nawigacja -->
+    <div class="navbar">
+        <a href="{{ url_for('home') }}" class="{% if active_page == 'home' %}active{% endif %}">Strona Główna</a>
+        <a href="{{ url_for('aquariums') }}" class="{% if active_page == 'aquariums' %}active{% endif %}">Akwaria</a>
+        {% if not session.get('logged_in') %}
+            <a href="{{ url_for('login') }}" class="{% if active_page == 'login' %}active{% endif %}">Zaloguj</a>
+        {% else %}
+            {% if session.get('role') == 'employee' %}
+                <a href="{{ url_for('employee') }}" class="{% if active_page == 'employee' %}active{% endif %}">Panel Pracownika</a>
+            {% elif session.get('role') == 'customer' %}
+                <a href="{{ url_for('tickets') }}" class="{% if active_page == 'tickets' %}active{% endif %}">Kup Bilet</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="{% if active_page == 'logout' %}active{% endif %}">Wyloguj</a>
+        {% endif %}
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Panel Pracownika - Edytuj Akwarium</h1>
+        <p>Edytuj dane akwarium, takie jak pojemność i typ wody.</p>
+
+        {% for aquarium in aquariums %}
+            <div class="aquarium-card">
+                <h3>{{ aquarium.Nazwa }}</h3>
+                <p>Typ wody: {{ aquarium.Typ_wody }}</p>
+                <p>Pojemność: {{ aquarium.Pojemnosc }} L</p>
+                <a href="{{ url_for('edit_aquarium',  aquarium_id=aquarium.id) }}" class="btn-primary">Edytuj</a>
+            </div>
+        {% endfor %}
+    </div>
+    <!-- Stopka -->
+    <footer>
+        &copy; 2025 Oceanarium. Wszystkie prawa zastrzeżone.
+    </footer>
+</body>
+</html>

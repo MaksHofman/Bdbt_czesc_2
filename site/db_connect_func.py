@@ -51,3 +51,41 @@ def get_user_info(user_id: int):
         return user_info
     else:
         return None
+
+def get_aquarium_data(aquarium_id):
+    # Query the database to get the aquarium data by its ID
+    aquarium = db.session.query(Akwarium).filter(Akwarium.id == aquarium_id).first()
+    
+    if aquarium:
+        # Return the aquarium data as a dictionary or object
+        return aquarium
+    else:
+        # Handle the case where no aquarium is found
+        return None
+
+def get_all_aquariums():
+    # Query all aquariums from the database
+    aquariums = db.session.query(Akwarium).all()
+    return aquariums
+
+def update_aquarium(aquarium_id, name, capacity, water_type, image):
+    # Retrieve the aquarium record from the database using the aquarium_id
+    aquarium = db.session.query(Akwarium).filter(Akwarium.id == aquarium_id).first()
+
+    if aquarium:
+        # Update the aquarium fields with the new data
+        aquarium.Nazwa = name
+        aquarium.Pojemnosc = capacity
+        aquarium.Typ_wody = water_type
+        
+        # If an image is provided, handle the image (you can store the file or update the path)
+        if image:
+            # Assuming you're saving the image to a static folder and storing the path in the database
+            image_path = save_image(image)  # Implement the image saving function
+            aquarium.Zdjecie = image_path  # Or store the byte data if you're saving images directly to the database
+
+        # Commit the changes to the database
+        db.session.commit()
+        return True  # Successfully updated
+    else:
+        return False  # Aquarium not found    

@@ -1,8 +1,8 @@
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, redirect, render_template, request, session, url_for, jsonify
-from models import db
-from db_connect_func import get_and_save_oceanarium_by_id
+from models import *
+from db_connect_func import get_and_save_oceanarium_by_id, get_aquarium_data, update_aquarium, get_all_aquariums
 from login_register import check_if_email_correct, anti_sql_injection_login_check, checking_if_login_correct, check_email_exists, add_user_to_db, get_user_from_db
 
 app = Flask(__name__)
@@ -35,10 +35,13 @@ def login():
         if checking_if_login_correct(login, password) and anti_sql_injection_login_check(login, password):
             session['logged_in'] = True
             user_info = get_user_from_db(login)
-            session['username'] = user_info.Nazwa
-            session['email'] = user_info.Email
-            session['czyPracownil'] = user_info.czyPracownik
-            return redirect(url_for('user_page'))
+            session['username'] = user_info["Nazwa"]
+            session['email'] = user_info["Email"]
+            session['czyPracownik'] = user_info["czyPracownik"]
+            if user_info["czyPracownik"]:
+                return redirect(url_for('employee'))
+            else:
+                return redirect(url_for('tickets'))
         else:
             wrong_login = "Wrong username or password"
             return render_template('login.html', wrong_login=wrong_login)
@@ -94,11 +97,37 @@ def register(confirm_password=None):
     return render_template('register.html', input_username="Username", input_mail="Email")
 
 # Panel pracownika
-@app.route('/employee')
+@app.route('/employee', methods=['GET'])
 def employee():
-    if not session.get('logged_in') or session.get('role') != 'employee':
+    if not session.get("czyPracownik"):
         return redirect(url_for('login'))
-    return render_template('employee.html', active_page='employee')
+    
+    # Get all aquariums to display
+    aquariums = get_all_aquariums()
+
+    return render_template('employee.html', aquariums=aquariums)
+
+@app.route('/edit_aquarium/<int:aquarium_id>', methods=['GET', 'POST'])
+def edit_aquarium(aquarium_id):
+    if not session.get("czyPracownik"):
+        return redirect(url_for('login'))
+
+    # Retrieve the specific aquarium to edit
+    aquarium = db.session.query(Akwarium).filter(Akwarium.id == aquarium_id).first()
+
+    if request.method == 'POST':
+        # Get the form data to update the aquarium
+        name = request.form['nazwa']
+        capacity = request.form['pojmnosc']
+        water_type = request.form['typ_wody']
+        image = request.files.get('zdjecie')
+
+        # Call the update function
+        update_aquarium(aquarium_id, name, capacity, water_type, image)
+
+        return redirect(url_for('employee'))  # Redirect to the employee panel after successful update
+    
+    return render_template('edit_aquarium.html', aquarium=aquarium)
 
 # Kupno biletów
 @app.route('/tickets')

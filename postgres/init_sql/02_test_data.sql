@@ -34,8 +34,8 @@ VALUES
 -- Wstawienie danych do Akwaria
 INSERT INTO Akwaria (Id_oceanaria, Pojemnosc, Typ_wody, Zdjecie)
 VALUES
-(1, 5000.00, 'Słona', NULL),
-(1, 3000.00, 'Słodka', NULL);
+(1, 5000, 'Słona', NULL),
+(1, 3000, 'Słodka', NULL);
 
 -- Wstawienie danych do Ryby
 INSERT INTO Ryby (Id_akwaria, Id_oceanaria, Gatunek, Typ_wody, Wiek)
