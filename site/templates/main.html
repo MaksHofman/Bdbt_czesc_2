@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
-    <!-- Nawigacja -->
     <div class="navbar">
         <a href="{{ url_for('home') }}" class="{% if active_page == 'home' %}active{% endif %}">Strona Główna</a>
         <a href="{{ url_for('aquariums') }}" class="{% if active_page == 'aquariums' %}active{% endif %}">Akwaria</a>
@@ -23,14 +22,12 @@
         {% endif %}
     </div>
 
-    <!-- Hero Section -->
     <div class="hero">
         <h1>Witamy w {{ oceanarium.nazwa }}im</h1>
         <p>Odkryj fascynujące życie morskie i podziwiaj nasze wyjątkowe ekspozycje.</p>
         <a href="{{ url_for('aquariums') }}" class="btn-primary">Zobacz Akwaria</a>
     </div>
 
-    <!-- Główna zawartość -->
     <div class="content">
         <div class="card">
             <h3>Nasze Akwaria</h3>
@@ -53,7 +50,6 @@
         </div>
     </div>
 
-    <!-- Oceanarium Information -->
     <div class="oceanarium-info">
         <h3>O Naszym Oceanarium</h3>
         <p><strong>Nazwa:</strong> {{ oceanarium.nazwa }}</p>
@@ -62,7 +58,6 @@
         <p><strong>Email:</strong> {{ oceanarium.email }}</p>
     </div>
 
-    <!-- Stopka -->
     <footer>
         &copy; 2025 Oceanarium. Wszystkie prawa zastrzeżone.
     </footer>

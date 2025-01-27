@@ -138,19 +138,15 @@ def edit_aquarium(aquarium_id):
 
 @app.route('/employee/delete_aquarium/<int:aquarium_id>', methods=['POST'])
 def delete_aquarium(aquarium_id):
-    # Ensure that the user is a logged-in employee
     if not session.get('czyPracownik'):
         return redirect(url_for('login'))
 
-    # Query for the aquarium by its ID
     aquarium_to_delete = Akwarium.query.get(aquarium_id)
     
     if aquarium_to_delete:
-        # Delete the aquarium from the database
         db.session.delete(aquarium_to_delete)
         db.session.commit()
     
-    # Redirect back to the employee page after deletion
     return redirect(url_for('employee'))
 
 # Kupno biletów

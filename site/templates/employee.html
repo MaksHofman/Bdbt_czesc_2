@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
-    <!-- Nawigacja -->
     <div class="navbar">
         <a href="{{ url_for('home') }}" class="{% if active_page == 'home' %}active{% endif %}">Strona Główna</a>
         <a href="{{ url_for('aquariums') }}" class="{% if active_page == 'aquariums' %}active{% endif %}">Akwaria</a>
@@ -15,21 +14,16 @@
         <a href="{{ url_for('logout') }}" class="{% if active_page == 'logout' %}active{% endif %}">Wyloguj</a>
     </div>
 
-    <!-- Treść strony -->
     <div class="employee-page">
         <h2>Panel Pracownika</h2>
         {% for aquarium in aquariums %}
         <div class="aquarium-item">
-            <!-- Zdjęcie akwarium -->
             <img src="data:image/jpeg;base64,{{ aquarium.zdjecie|b64encode }}" alt="Zdjęcie akwarium">
-            <!-- Informacje o akwarium -->
             <div class="info">
                 <h3>Akwarium #{{ aquarium.id }}</h3>
                 <p><strong>Pojemność:</strong> {{ aquarium.pojemnosc }} L</p>
                 <p><strong>Typ wody:</strong> {{ aquarium.typ_wody }}</p>
-                <!-- Przycisk edycji -->
                 <a href="{{ url_for('edit_aquarium', aquarium_id=aquarium.id) }}" class="btn-edit">Edytuj</a>
-                <!-- Przycisk usunięcia -->
                 <form action="{{ url_for('delete_aquarium', aquarium_id=aquarium.id) }}" method="POST" style="display: inline;">
                     <button type="submit" class="btn-delete">Usuń</button>
                 </form>
@@ -38,7 +32,6 @@
         {% endfor %}
     </div>
 
-    <!-- Stopka -->
     <footer>
         &copy; 2025 Oceanarium. Wszystkie prawa zastrzeżone.
     </footer>

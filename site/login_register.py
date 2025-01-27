@@ -12,21 +12,17 @@ def anti_sql_injection_login_check(login, password) -> bool:
     else:
         return False
 
-# Checks if an email is already in use
 def check_email_exists(email: str) -> bool:
     return Uzytkownik.query.filter_by(email=email).first() is not None
 
 
-# Checks if login credentials are correct
 def checking_if_login_correct(login: str, password: str) -> bool:
     user = Uzytkownik.query.filter_by(nazwa=login, haslo=password).first()
     return user is not None
 
 
-# Adds a user to the database
 def add_user_to_db(login: str, password: str, email: str):
     try:
-        # Check if the login already exists
         existing_user = Uzytkownik.query.filter_by(nazwa=login).first()
         if existing_user:
             return False
@@ -36,8 +32,8 @@ def add_user_to_db(login: str, password: str, email: str):
             nazwa=login,
             haslo=password,
             email=email,
-            id_pracownika=None,  # No relation to Pracownik
-            id_klienta=None      # No relation to Klient
+            id_pracownika=None,  
+            id_klienta=None     
         )
         db.session.add(new_user)
         db.session.commit()
@@ -45,10 +41,9 @@ def add_user_to_db(login: str, password: str, email: str):
         return True
     
     except Exception as e:
-        db.session.rollback()  # Rollback in case of failure
+        db.session.rollback()
         return {"success": False, "message": f"An error occurred: {str(e)}"}
 
-# Utility functions
 def check_if_email_correct(email: str) -> bool:
     regex = r'^\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     return re.match(regex, email) is not None
@@ -57,16 +52,14 @@ def check_if_email_correct(email: str) -> bool:
 def get_user_info(user_id: int):
     user = Uzytkownik.query.filter(Uzytkownik.id == user_id).first()
     if user:
-        # Prepare user information
         user_info = {
             "id": user.id,
             "nazwa": user.nazwa,
             "id_pracownika": user.id_pracownika,
             "id_klienta": user.id_klienta,
-            "is_employee": user.id_pracownika is not None,  # True if the user is an employee
+            "is_employee": user.id_pracownika is not None, 
         }
 
-        # Add detailed information about employee if exists
         if user.id_pracownika:
             user_info["pracownik"] = {
                 "imie": user.pracownik.imie,
@@ -76,7 +69,6 @@ def get_user_info(user_id: int):
                 "placa": float(user.pracownik.placa),
             }
 
-        # Add detailed information about client if exists
         if user.id_klienta:
             user_info["klient"] = {
                 "imie": user.klient.imie,
@@ -90,18 +82,16 @@ def get_user_info(user_id: int):
 
 def get_user_from_db(login: str):
     try:
-        # Query the Uzytkownik table for the specified user
         user = Uzytkownik.query.filter_by(nazwa=login).first()
 
         if not user:
             return False
 
-        # Prepare the result
         user_info = {
             "id": user.id,
             "Nazwa": user.nazwa,
             "Email": user.email,
-            "czyPracownik": user.id_pracownika is not None  # Boolean check if the user is a Pracownik
+            "czyPracownik": user.id_pracownika is not None  
         }
 
         return user_info

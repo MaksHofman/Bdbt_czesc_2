@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
-    <!-- Nawigacja -->
     <div class="navbar">
         <a href="{{ url_for('home') }}" class="{% if active_page == 'home' %}active{% endif %}">Strona Główna</a>
         <a href="{{ url_for('aquariums') }}" class="{% if active_page == 'aquariums' %}active{% endif %}">Akwaria</a>
@@ -15,7 +14,6 @@
         <a href="{{ url_for('logout') }}" class="{% if active_page == 'logout' %}active{% endif %}">Wyloguj</a>
     </div>
 
-    <!-- Treść strony -->
     <div class="edit-page">
         <h2>Edytuj Akwarium</h2>
         <form method="POST" enctype="multipart/form-data">
@@ -32,7 +30,6 @@
         </form>
     </div>
 
-    <!-- Stopka -->
     <footer>
         &copy; 2025 Oceanarium. Wszystkie prawa zastrzeżone.
     </footer>

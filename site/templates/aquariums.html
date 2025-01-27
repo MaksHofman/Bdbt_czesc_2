@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
-    <!-- Nawigacja -->
     <div class="navbar">
         <a href="{{ url_for('home') }}" class="{% if active_page == 'home' %}active{% endif %}">Strona Główna</a>
         <a href="{{ url_for('aquariums') }}" class="{% if active_page == 'aquariums' %}active{% endif %}">Akwaria</a>
@@ -26,9 +25,7 @@
         <div class="aquarium-list">
             {% for aquarium in aquariums %}
             <div class="aquarium-item">
-                <!-- Zdjęcie akwarium -->
                 <img src="data:image/jpeg;base64,{{ aquarium.zdjecie|b64encode }}" alt="Zdjęcie akwarium">
-                <!-- Informacje o akwarium -->
                 <div class="info">
                     <h3>Akwarium #{{ aquarium.id }}</h3>
                     <p><strong>Pojemność:</strong> {{ aquarium.pojemnosc }} L</p>
@@ -39,7 +36,6 @@
         </div>
     </div>
 
-    <!-- Stopka -->
     <footer>
         &copy; 2025 Oceanarium. Wszystkie prawa zastrzeżone.
     </footer>
