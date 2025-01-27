@@ -14,9 +14,9 @@
         {% if not session.get('logged_in') %}
             <a href="{{ url_for('login') }}" class="{% if active_page == 'login' %}active{% endif %}">Zaloguj</a>
         {% else %}
-            {% if session.get('role') == 'employee' %}
+            {% if session.get('czyPracownik') == True %}
                 <a href="{{ url_for('employee') }}" class="{% if active_page == 'employee' %}active{% endif %}">Panel Pracownika</a>
-            {% elif session.get('role') == 'customer' %}
+            {% elif session.get('czyPracownik') == False %}
                 <a href="{{ url_for('tickets') }}" class="{% if active_page == 'tickets' %}active{% endif %}">Kup Bilet</a>
             {% endif %}
             <a href="{{ url_for('logout') }}" class="{% if active_page == 'logout' %}active{% endif %}">Wyloguj</a>
@@ -25,7 +25,7 @@
 
     <!-- Hero Section -->
     <div class="hero">
-        <h1>Witamy w Oceanarium</h1>
+        <h1>Witamy w {{ oceanarium.nazwa }}im</h1>
         <p>Odkryj fascynujące życie morskie i podziwiaj nasze wyjątkowe ekspozycje.</p>
         <a href="{{ url_for('aquariums') }}" class="btn-primary">Zobacz Akwaria</a>
     </div>
@@ -45,8 +45,21 @@
         <div class="card">
             <h3>Kup Bilet</h3>
             <p>Wejdź do magicznego świata oceanarium. Kup bilet online i zaoszczędź czas!</p>
-            <a href="{{ url_for('login') }}" class="btn-primary">Kup Bilet</a>
+            {% if session['logged_in'] and session["czyPracownik"] == False %}
+                <a href="{{ url_for('ticket') }}" class="btn-primary">Kup Bilet</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn-primary">Kup Bilet</a>
+            {% endif %}
         </div>
+    </div>
+
+    <!-- Oceanarium Information -->
+    <div class="oceanarium-info">
+        <h3>O Naszym Oceanarium</h3>
+        <p><strong>Nazwa:</strong> {{ oceanarium.nazwa }}</p>
+        <p><strong>Adres:</strong> {{ oceanarium.adress }}</p>
+        <p><strong>Telefon:</strong> {{ oceanarium.telefon }}</p>
+        <p><strong>Email:</strong> {{ oceanarium.email }}</p>
     </div>
 
     <!-- Stopka -->

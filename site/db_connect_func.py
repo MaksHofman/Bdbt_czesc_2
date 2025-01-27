@@ -1,7 +1,16 @@
 from models import *
 from flask import session
 from sqlalchemy.orm import Session
+import io
 
+def save_image(image):
+    try:
+        # Read the image file into binary format
+        binary_data = image.read()
+        return binary_data
+    except Exception as e:
+        print(f"Error processing image: {e}")
+        return None
 
 def get_and_save_oceanarium_by_id(oceanarium_id: int):
     oceanarium = Oceanarium.query.filter(Oceanarium.id == oceanarium_id).first()
@@ -73,19 +82,33 @@ def update_aquarium(aquarium_id, name, capacity, water_type, image):
     aquarium = db.session.query(Akwarium).filter(Akwarium.id == aquarium_id).first()
 
     if aquarium:
-        # Update the aquarium fields with the new data
         aquarium.Nazwa = name
         aquarium.Pojemnosc = capacity
         aquarium.Typ_wody = water_type
-        
-        # If an image is provided, handle the image (you can store the file or update the path)
-        if image:
-            # Assuming you're saving the image to a static folder and storing the path in the database
-            image_path = save_image(image)  # Implement the image saving function
-            aquarium.Zdjecie = image_path  # Or store the byte data if you're saving images directly to the database
 
-        # Commit the changes to the database
-        db.session.commit()
-        return True  # Successfully updated
+        if image:
+            binary_image = save_image(image)
+            if binary_image:
+                aquarium.Zdjecie = binary_image
+        try:
+            db.session.commit()
+            return True  
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error updating aquarium: {e}")
+            return False
     else:
-        return False  # Aquarium not found    
+        return False  
+
+def get_typ_ulgi(user_id):
+    # Query to get the user by user_id, then access their associated 'klient' record
+    uzytkownik = Uzytkownik.query.filter_by(id=user_id).first()
+    
+    if uzytkownik:
+        # Get the 'typ_ulgi' of the associated klient
+        klient = uzytkownik.klient
+        if klient:
+            return klient.typ_ulgi
+        else:
+            return None  # If klient does not exist for this user
+    return None  # If no user found with the provided user_id

@@ -98,6 +98,7 @@ def get_user_from_db(login: str):
 
         # Prepare the result
         user_info = {
+            "id": user.id,
             "Nazwa": user.nazwa,
             "Email": user.email,
             "czyPracownik": user.id_pracownika is not None  # Boolean check if the user is a Pracownik

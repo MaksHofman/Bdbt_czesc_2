@@ -1,4 +1,0 @@
-NIEDziala update bazy danych
-wypisywanie wartosci akwario
-niema my page, akwarium , bilety
-niema danych o pracownikach
